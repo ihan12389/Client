@@ -5,7 +5,6 @@ import ChoSeongFilterForm from "../Form/ChoSeongFilterForm";
 import NormalFilterForm from "../Form/NormalFilterForm";
 import styled from "styled-components";
 import Container from "react-bootstrap/esm/Container";
-import { useRef, useImperativeHandle } from "react";
 
 const StyledContainer = styled(Container)`
     padding : 0px;
@@ -14,37 +13,28 @@ const StyledContainer = styled(Container)`
 `;
 
 function Filter(props) {
+    const filterTypeMap = {
+        "onset": ChoSeongFilterForm,
+        "nucleus": JoongSeongFilterForm,
+        "coda": JongSeongFilterForm,
+        "normal": NormalFilterForm,
+    };
+
+    const FilterForm = filterTypeMap[props.filterType] || NormalFilterForm;
+
     return(
         <StyledContainer>
-            {/* filterType에 따라 필터 종류 선택 */}
-            {
-                props.filterType == "choseong" ? (
-                <FilterRow name={props.name}>
-                    <ChoSeongFilterForm/>
-                </FilterRow>
-                ) : (
-                    props.filterType == "joongseong" ? (
-                    <FilterRow name={props.name}>
-                        <JoongSeongFilterForm />
-                    </FilterRow>
-                ) : (
-                    props.filterType == "jongseong" ? (
-                    <FilterRow name={props.name}>
-                        <JongSeongFilterForm />
-                    </FilterRow>
-                    ) : (
-                    <FilterRow name={props.name}>
-                        <NormalFilterForm
-                            title={props.title}
-                            seq = {props.seq}
-                            textList = {props.textList}
-                            type = {props.type} 
-                            default = {props.default}
-                        />
-                    </FilterRow>
-                    )
-                ))
-            }
+            <FilterRow name={props.name} title={props.title} filterInfo={props.filterInfo} setFilterInfo={props.setFilterInfo} type={props.type}>
+                <FilterForm
+                    title={props.title}
+                    seq={props.seq}
+                    textList={props.textList}
+                    type={props.type} 
+                    default={props.default}
+                    filterInfo={props.filterInfo}
+                    setFilterInfo={props.setFilterInfo}
+                />
+            </FilterRow>
         </StyledContainer>
     );
 }

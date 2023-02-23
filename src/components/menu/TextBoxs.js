@@ -11,13 +11,13 @@ const TextBoxContainer = styled(Container)`
     gap : 10px;
 `;
 
-function TextBoxs() {
+function TextBoxs({words, onChange}) {
     var TextBoxNum = 10;
 
     return (
         <TextBoxContainer>
            {makeArray(TextBoxNum).map((r) => (
-                <TextBox num={r} />
+                <TextBox num={r} t={words} cc={onChange} key={r}/>
             ))}
         </TextBoxContainer>
     )

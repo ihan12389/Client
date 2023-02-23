@@ -1,6 +1,64 @@
+import { useEffect } from "react";
 import Form from "react-bootstrap/Form";
 
 function NormalFilterForm(props) {
+    const { filterInfo, setFilterInfo } = props;
+
+    // 전체선택용 체크박스 전용 이벤트처리
+    useEffect(() => {
+        const name = props.title;
+        const allCheckedName = props.title + "AllChecked";
+        const isAllChecked = filterInfo[allCheckedName];
+        let updatedFilterInfo = [...filterInfo[name]];
+
+        if (isAllChecked) {
+            if (props.textList.length !== updatedFilterInfo.length && props.type !== "radio") {
+                document.getElementsByName(props.title).forEach(item => item.checked = true);
+            }
+        } else {
+            if (props.textList.length === updatedFilterInfo.length && props.type !== "radio") {
+                document.getElementsByName(props.title).forEach(item => item.checked = false);
+            }
+        }
+
+    }, [filterInfo[props.title + "AllChecked"]]);
+
+
+    const onClickSecond = (e) => {
+        const value = e.target.value;
+        const name = props.title;
+        const allCheckedName = props.title + "AllChecked";
+        let updatedFilterInfo = [...filterInfo[name]];
+        let updatedAllChecked = filterInfo[allCheckedName];
+
+        if (e.target.checked) {
+            if (!updatedFilterInfo.includes(value)) {
+                updatedFilterInfo = [...updatedFilterInfo, value];
+            }
+            
+            if (props.type === "radio") {
+                updatedFilterInfo = updatedFilterInfo.filter(item => item === value);
+            }
+        } else {
+            if (updatedFilterInfo.includes(value)) {
+                updatedFilterInfo = updatedFilterInfo.filter(item => item !== value);
+            }
+        }
+
+        // 체크박스 전체를 선택했다면 부모 컴포넌트에 AllChecked 했다고 정보를 전달
+        if (props.textList.length === updatedFilterInfo.length) {
+            updatedAllChecked = true;
+        } else {
+            updatedAllChecked = false;
+        }
+
+        setFilterInfo(prevFilterInfo => ({
+            ...prevFilterInfo,
+            [name]: updatedFilterInfo,
+            [allCheckedName]: updatedAllChecked,
+        }));
+    }
+
     return(
         // 일반 필터 메뉴 Form
         <Form>
@@ -17,7 +75,8 @@ function NormalFilterForm(props) {
                                 value={`${text}`}
                                 name={`${props.title}`}
                                 type={`${props.type}`}
-                                id={`inline-${props.type}-${props.seq}`}
+                                id={`inline-${props.type}-${props.seq}-${props.title}${index}`}
+                                onClick={onClickSecond}
                                 defaultChecked
                             />
                         );
@@ -32,7 +91,8 @@ function NormalFilterForm(props) {
                                 value={`${text}`}
                                 name={`${props.title}`}
                                 type={`${props.type}`}
-                                id={`inline-${props.type}-${props.seq}`}
+                                id={`inline-${props.type}-${props.seq}-${props.title}${index}`}
+                                onClick={onClickSecond}
                             />
                         );
                     }

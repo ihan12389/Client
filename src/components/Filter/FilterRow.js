@@ -4,31 +4,36 @@ import FilterTitle from "../Text/FilterTitle";
 import styled from "styled-components";
 
 const StyledRow = styled(Row)`
-    padding : 0px;
-    margin : 0px;
-    width : 100%;
+    padding: 0;
+    margin: 0;
 `;
 
 const StyledCol = styled(Col)`
-    border-right : 2px solid black;
-    padding-top : 20px;
-    padding-right : 0px;
-    margin : 0px;
+    padding-top: 20px;
+    padding-right: 0;
+    margin: 0;
+
+   
 `;
 
-function FilterRow({name, children}) {
+const StyledTitleCol = styled(StyledCol)`
+    @media only screen and (min-width: 1200px) {
+        border-right: none;
+    }
+`;
+
+function FilterRow({name, title, children, type, filterInfo, setFilterInfo}) {
     return (
-            <StyledRow>
-                {/* 하나의 필터 메뉴 생성 */}
-                <StyledCol xs={4} sm={4} md={3} lg={3} xl={2} xxl={2}>
-                    {/* 필터의 제목 생성*/}
-                    <FilterTitle name={name}/>
-                </StyledCol>
-                <StyledCol xs={8} sm={8} md={8} lg={9} xl={8} xxl={8}>
-                    {/* 필터의 폼 생성*/}
-                    {children}
-                </StyledCol>
-            </StyledRow>
+        <StyledRow>
+            {/* 필터 제목 생성 */}
+            <StyledTitleCol xs={4} sm={4} md={3} lg={3} xl={2} xxl={2}>
+                <FilterTitle name={name} title={title} type={type} filterInfo={filterInfo} setFilterInfo={setFilterInfo}/>
+            </StyledTitleCol>
+            {/* 필터 폼 생성 */}
+            <StyledCol xs={8} sm={8} md={9} lg={9} xl={10} xxl={10}>
+                {children}
+            </StyledCol>
+        </StyledRow>
     );
 }
 
